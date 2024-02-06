@@ -1,0 +1,10 @@
+CALLSIGN = "VE3SVF_TESTING"
+LAT = 43.6689
+LONG = -79.4759
+ALT = 100
+RADIO = "Radio information goes here"
+ANTENNA = "Antenna information goes here"
+ENABLE_DEV = False #Do not touch for regular flights! Only for testing the SondeHub connetion!
+LAT_OFFSET = 0.01
+LONG_OFFSET = 0.03
+ALT_OFFSET = 9000
