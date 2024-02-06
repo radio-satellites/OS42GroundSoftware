@@ -316,6 +316,7 @@ while True:
                 total_count = total_count + 1
                 kb_count = kb_count + len(data)
                 updateFigures()
+                isSSDV = False
             elif success == packets.GPS_FRAME_INVALID and lat !=0 and long !=0:
                 #It is possible that the spacecraft didn't send an altitude
                 #Then, we will get an invalid type, but the location is still valid!
@@ -347,6 +348,7 @@ while True:
                 total_count = total_count + 1
                 kb_count = kb_count + len(data)
                 updateFigures()
+                isSSDV = False
             else:
                 if lat == 0 and long == 0:
                     print("[WARN] GPS frame values are zero...")
