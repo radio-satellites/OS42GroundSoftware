@@ -367,6 +367,7 @@ while True:
             isSSDV = False
         elif packet_type == packets.OS42_TYPE_TEMP_READING:
             return_code,reading = packets.decode_temp(data)
+            isSSDV = False
 
             if return_code == packets.GPS_FRAME_VALID:
                 print("Payload reports a temperature of",reading)
