@@ -14,6 +14,7 @@ from sondehub.amateur import Uploader
 import sondehub_config as config
 import datetime
 import iconfile
+import sys
 
 version = "0.9.1"
 
@@ -43,6 +44,12 @@ kb_count = 0
 image_count = 0
 
 isSSDV = True
+
+lcdConnect = False
+
+if "uselcd" in list(sys.argv):
+    lcdConnect = True
+    print("Using LCD!")
 
 try:
 
@@ -162,7 +169,12 @@ while True:
             try:
                 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 
+                if lcdConnect:
+                    s_lcd = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    s_lcd.connect((TCP_IP,TCP_PORT+25))
+                
                 s.connect((TCP_IP, TCP_PORT))
+                
                 #s.settimeout(1)
                 
                 print("Success!")
@@ -287,6 +299,15 @@ while True:
                 print(str(lat)+","+str(long))
                 print("========================")
 
+                if lcdConnect:
+                    s_lcd.send(("a:"+str(alt)).encode())
+                    time.sleep(0.04)
+                    s_lcd.send(("h:"+str(h_t)).encode())
+                    time.sleep(0.04)
+                    s_lcd.send(("m:"+str(m_t)).encode())
+                    time.sleep(0.04)
+                    s_lcd.send(("s:"+str(s_t)).encode())
+
                 #Update the window
 
                 window[constants.LATITUDE_TEXT].update("Latitude: "+str(lat))
@@ -372,6 +393,8 @@ while True:
             if return_code == packets.GPS_FRAME_VALID:
                 print("Payload reports a temperature of",reading)
                 window[constants.TEMPERATURE_TEXT].update("Temperature: "+str(reading)+" C")
+                if lcdConnect:
+                    s_lcd.send(("t:"+str(reading)).encode())
             else:
                 print("Unable to decode temperature telemetry frame")
         else:
@@ -390,6 +413,8 @@ while True:
         	print("Spacecraft set to "+str(values[constants.SPACECRAFT_UPDATE][0]))
         	spacecraft = str(values[constants.SPACECRAFT_UPDATE][0])
         	window[constants.SPACECRAFT_TEXT].update("Spacecraft Name: "+str(spacecraft))
+        	if lcdConnect:
+                    s_lcd.send(("c:"+str(spacecraft)).encode())
         if event == constants.IMAGE_FLUSH_BUTTON:
             if sg.popup_yes_no('Are you sure you want to delete all imagery?') == 'Yes':
                 #Flush imagery here
