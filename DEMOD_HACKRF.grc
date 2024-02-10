@@ -90,6 +90,18 @@ blocks:
     coordinate: [560, 84.0]
     rotation: 0
     state: true
+- name: receive_offset
+  id: variable
+  parameters:
+    comment: ''
+    value: 500e3
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [160, 156.0]
+    rotation: 0
+    state: true
 - name: samp_rate
   id: variable
   parameters:
@@ -157,6 +169,46 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [376, 84.0]
+    rotation: 0
+    state: true
+- name: analog_sig_source_x_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: '1'
+    comment: ''
+    freq: -receive_offset
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    phase: '0'
+    samp_rate: samp_rate
+    type: complex
+    waveform: analog.GR_SIN_WAVE
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [80, 308.0]
+    rotation: 0
+    state: true
+- name: blocks_multiply_xx_0
+  id: blocks_multiply_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '2'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [320, 240.0]
     rotation: 0
     state: true
 - name: blocks_throttle_0
@@ -372,7 +424,7 @@ blocks:
     alias: ''
     amp: 'False'
     bandwidth: '0'
-    center_freq: target_freq
+    center_freq: target_freq-receive_offset
     comment: ''
     dev_args: ''
     gain: ifgain_slider
@@ -390,13 +442,15 @@ blocks:
     state: true
 
 connections:
+- [analog_sig_source_x_0, '0', blocks_multiply_xx_0, '1']
+- [blocks_multiply_xx_0, '0', rational_resampler_xxx_0, '0']
 - [blocks_throttle_0, '0', lora_rx_0, '0']
 - [blocks_throttle_0, '0', lora_rx_1, '0']
 - [blocks_throttle_0, '0', qtgui_freq_sink_x_0, '0']
 - [lora_rx_0, '0', network_tcp_sink_0, '0']
 - [lora_rx_1, '0', network_tcp_sink_0_0, '0']
 - [rational_resampler_xxx_0, '0', blocks_throttle_0, '0']
-- [soapy_hackrf_source_0, '0', rational_resampler_xxx_0, '0']
+- [soapy_hackrf_source_0, '0', blocks_multiply_xx_0, '0']
 
 metadata:
   file_format: 1
