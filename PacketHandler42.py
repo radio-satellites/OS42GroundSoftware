@@ -100,8 +100,8 @@ def decode_ssdv(buffer,callsign_e):
     
 def decode_GPS(line):
     #Decode a modified UKHAS OS-42 string
-    #$$,UK,43.6691818,-79.5212708,375
-    #$$, 165.00,43.6692581,-79.5214005,   0.00,  20.00,  40.00,  39.00,48
+    #$$,UK,79.6691818,-90.5322708,375
+    #$$, 165.00,79.6691818,-90.5322708,   0.00,  20.00,  40.00,  39.00,48
     return_type = GPS_FRAME_VALID
     
     try:
