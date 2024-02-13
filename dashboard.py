@@ -25,7 +25,7 @@ callsign_dec = ""
 
 reading = -9
 
-spacecraft_names = ['OS42','OS42-T','OS42-3','OS42-4','OS42-5']
+spacecraft_names = ['OS42-1','OS42-T','OS42-3','OS42-4','OS42-5']
 
 spacecraft = spacecraft_names[0] #Default spacecraft to receive
 
@@ -91,6 +91,48 @@ def updateFigures():
     window[constants.GPSPACKET_TEXT].update("GPS/Telemetry Frames: "+str(gps_count))
     window[constants.UNKNOWNFRAME_TEXT].update("Unknown Frames: "+str(uk_count))
     window[constants.TOTALFRAME_TEXT].update("Total Frames: "+str(total_count))
+
+def updateSSDV():
+    #Decode SSDV
+    try:
+        return_code,imageid = packets.decode_ssdv(imagery_buffer,spacecraft)
+        if return_code == packets.OS42_TYPE_SUCCESS:
+            callsign_dec = spacecraft
+            callsign_good = True
+    except:
+        imageid = -2
+        return_code = -4
+    imageid_now = imageid
+                
+    if return_code == packets.OS42_TYPE_SUCCESS:
+        im = Image.open('rxtemp.jpg')
+        im.save('rxtemp.png')
+        window[constants.SSDV_IMAGE].update("rxtemp.png")
+def newImage():
+    #New image, save the previous one and move on
+    #Redecode everything
+    return_code,imageid = packets.decode_ssdv(imagery_buffer,spacecraft)
+    #Move our temp file into a safe place
+    os.rename(os.getcwd()+"/rxtemp.ssdv", os.getcwd()+"/rx/rxtemp.ssdv")
+    os.rename(os.getcwd()+"/rxtemp.jpg", os.getcwd()+"/rx/rxtemp.jpg")
+    #Rename our files
+    os.rename(os.getcwd()+"/rx/rxtemp.ssdv", os.getcwd()+"/rx/"+str(image_count)+".ssdv")
+    os.rename(os.getcwd()+"/rx/rxtemp.jpg", os.getcwd()+"/rx/"+str(image_count)+".jpg")
+
+    #Initiate the camera post processing script
+    process = subprocess.Popen(['python3',os.getcwd()+'/correct.py',str(os.getcwd()+"/rx/"+str(image_count)+".jpg"),str(os.getcwd()+"/rx/"+str(image_count)+"_corr.png")])
+
+    #Now, prepare for the new image
+    imagery_buffer = bytearray(data)
+    previous_imageid = imageid_now
+
+    image_count = image_count + 1
+
+    f_imageid = open("imageid.txt",'w')
+    f_imageid.write(str(image_count))
+    f_imageid.close()
+                
+    print("Finished downlinking image with Image ID "+str(imageid_now)+" with local ID "+str(image_count-1))
 
 """
 def paste(str, p=True, c=True):
@@ -222,6 +264,8 @@ while True:
             #print(time.time() - start_time)
 
             if time.time() - start_time > 1.5:
+                newImage()
+                """
                 #New image, save the previous one and move on
                 #Redecode everything
                 return_code,imageid = packets.decode_ssdv(imagery_buffer,spacecraft)
@@ -246,10 +290,13 @@ while True:
                 f_imageid.close()
                 
                 print("Finished downlinking image with Image ID "+str(imageid_now)+" with local ID "+str(image_count-1))
+                """
             else:
                 imagery_buffer = imagery_buffer + data
 
             if total_count % 4 == 0:
+                updateSSDV()
+                """
                 #Decode SSDV
                 try:
                     return_code,imageid = packets.decode_ssdv(imagery_buffer,spacecraft)
@@ -265,6 +312,7 @@ while True:
                     im = Image.open('rxtemp.jpg')
                     im.save('rxtemp.png')
                     window[constants.SSDV_IMAGE].update("rxtemp.png")
+                """
         elif packet_type == packets.OS42_TYPE_GPS_LOCK:
             print("[TLM] High speed telemetry GPS lock")
             gps_count = gps_count + 1
@@ -410,10 +458,10 @@ while True:
     if event != constants.TIMEOUT:
         #print(event, values)
         if event == constants.SPACECRAFT_UPDATE:
-        	print("Spacecraft set to "+str(values[constants.SPACECRAFT_UPDATE][0]))
-        	spacecraft = str(values[constants.SPACECRAFT_UPDATE][0])
-        	window[constants.SPACECRAFT_TEXT].update("Spacecraft Name: "+str(spacecraft))
-        	if lcdConnect:
+            print("Spacecraft set to "+str(values[constants.SPACECRAFT_UPDATE][0]))
+            spacecraft = str(values[constants.SPACECRAFT_UPDATE][0])
+            window[constants.SPACECRAFT_TEXT].update("Spacecraft Name: "+str(spacecraft))
+            if lcdConnect:
                     s_lcd.send(("c:"+str(spacecraft)).encode())
         if event == constants.IMAGE_FLUSH_BUTTON:
             if sg.popup_yes_no('Are you sure you want to delete all imagery?') == 'Yes':

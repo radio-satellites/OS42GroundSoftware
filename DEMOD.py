@@ -86,22 +86,22 @@ class DEMOD(gr.top_block, Qt.QWidget):
         self.target_freq = target_freq = 434e6
         self.symbols_per_sec = symbols_per_sec = float(bw) / (2**sf)
         self.samp_rate = samp_rate = int(2.56e6)
-        self.rfgain_slider = rfgain_slider = 10
-        self.ifgain_slider = ifgain_slider = 10
+        self.rfgain_slider = rfgain_slider = 36
+        self.ifgain_slider = ifgain_slider = 23
         self.capture_freq = capture_freq = 434.0e6
         self.bitrate = bitrate = sf * (1 / (2**sf / float(bw)))
-        self.bbgain_slider = bbgain_slider = 10
+        self.bbgain_slider = bbgain_slider = 20
 
         ##################################################
         # Blocks
         ##################################################
-        self._rfgain_slider_range = Range(0, 40, 1, 10, 200)
+        self._rfgain_slider_range = Range(0, 40, 1, 36, 200)
         self._rfgain_slider_win = RangeWidget(self._rfgain_slider_range, self.set_rfgain_slider, "RF Gain", "counter_slider", float, QtCore.Qt.Horizontal)
         self.top_layout.addWidget(self._rfgain_slider_win)
-        self._ifgain_slider_range = Range(0, 40, 1, 10, 200)
+        self._ifgain_slider_range = Range(0, 40, 1, 23, 200)
         self._ifgain_slider_win = RangeWidget(self._ifgain_slider_range, self.set_ifgain_slider, "IF Gain", "counter_slider", float, QtCore.Qt.Horizontal)
         self.top_layout.addWidget(self._ifgain_slider_win)
-        self._bbgain_slider_range = Range(0, 40, 1, 10, 200)
+        self._bbgain_slider_range = Range(0, 40, 1, 20, 200)
         self._bbgain_slider_win = RangeWidget(self._bbgain_slider_range, self.set_bbgain_slider, "BB Gain", "counter_slider", float, QtCore.Qt.Horizontal)
         self.top_layout.addWidget(self._bbgain_slider_win)
         self.rtlsdr_source_0 = osmosdr.source(
