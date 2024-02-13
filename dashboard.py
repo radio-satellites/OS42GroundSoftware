@@ -98,16 +98,21 @@ def updateSSDV():
         return_code,imageid = packets.decode_ssdv(imagery_buffer,spacecraft)
         if return_code == packets.OS42_TYPE_SUCCESS:
             callsign_dec = spacecraft
+            if callsign_good == False:
+                print("Callsign validated!")
             callsign_good = True
     except:
         imageid = -2
         return_code = -4
     imageid_now = imageid
+
+    try:
                 
-    if return_code == packets.OS42_TYPE_SUCCESS:
         im = Image.open('rxtemp.jpg')
         im.save('rxtemp.png')
         window[constants.SSDV_IMAGE].update("rxtemp.png")
+    except:
+        print("Failed updating image...")
 def newImage():
     global imagery_buffer
     global image_count
@@ -198,6 +203,7 @@ while True:
             )
 
             sondehub_enabled = True
+            print("Sondehub enabled!")
 
             print("Success!")
         except:
@@ -482,8 +488,10 @@ while True:
             #Copy our coordinates to clipboard
             pyperclip.copy(str(str(lat)+","+str(long)))
         if event == constants.NEW_IMAGE_BUTTON:
+            print("Manual new image...")
             newImage()
         if event == constants.UPDATE_IMAGE_BUTTON:
+            print("Manual SSDV update...")
             updateSSDV()
                 
     if event == sg.WIN_CLOSED:
