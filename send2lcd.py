@@ -2,8 +2,13 @@ import time
 from threading import Thread
 import lcdapi as lcd
 import socket
+import os
 
-lcd.init(str(lcd.get_port())) #Get port and init display
+lcd_port = str(lcd.get_port())
+
+os.system("fuser -k "+str(lcd_port))
+
+lcd.init(lcd_port) #Get port and init display
 lcd.switch_line(0)
 time.sleep(2)
 lcd.print_lcd("OS42 Car Display")

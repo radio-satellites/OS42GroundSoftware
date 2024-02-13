@@ -93,6 +93,7 @@ def updateFigures():
     window[constants.TOTALFRAME_TEXT].update("Total Frames: "+str(total_count))
 
 def updateSSDV():
+    global callsign_good
     #Decode SSDV
     try:
         return_code,imageid = packets.decode_ssdv(imagery_buffer,spacecraft)
@@ -374,6 +375,8 @@ while True:
                 window[constants.TIMESTAMP_TEXT].update("Timestamp: "+str(int(float(h_t)))+":"+str(int(float(m_t)))+":"+str(int(float(s_t))))
 
                 #Upload to sondehub
+                print("SondehubEnabled",sondehub_enabled)
+                print("CallsignGood",callsign_good)
                 if sondehub_enabled and callsign_good:
                     try:
                         uploader.add_telemetry(
