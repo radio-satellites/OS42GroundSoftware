@@ -65,7 +65,7 @@ previous_imageid = 0
 imageid_now = 0
 
 
-col2 = sg.Column([[sg.Frame('Socket/Telemetry stats:', [[sg.Text("Socket Disconnected",text_color="red",key="-SOCKETTEXT-")],[sg.Text("Total KB downlinked: N/A",key="-TOTALKBTEXT-")],[sg.Text("Imagery Frames: N/A",text_color="green",key="-IMAGERYCOUNTTEXT-")],[sg.Text("GPS/Telemetry Frames: N/A",text_color="orange",key="-GPSFRAMETEXT-")],[sg.Text("Unknown Frames: N/A",text_color="red",key="-UNKNOWNTEXT-")],[sg.Text("Total Frames: N/A",key="-TOTALFRAMETEXT-")],[sg.Button("Flush all imagery",key="-IMGFLUSH-")],[sg.Button("Copy GPS coordinates",key="-COPYCOORDS-")]])],
+col2 = sg.Column([[sg.Frame('Socket/Telemetry stats:', [[sg.Text("Socket Disconnected",text_color="red",key="-SOCKETTEXT-")],[sg.Text("Total KB downlinked: N/A",key="-TOTALKBTEXT-")],[sg.Text("Imagery Frames: N/A",text_color="green",key="-IMAGERYCOUNTTEXT-")],[sg.Text("GPS/Telemetry Frames: N/A",text_color="orange",key="-GPSFRAMETEXT-")],[sg.Text("Unknown Frames: N/A",text_color="red",key="-UNKNOWNTEXT-")],[sg.Text("Total Frames: N/A",key="-TOTALFRAMETEXT-")],[sg.Button("Flush all imagery",key="-IMGFLUSH-")],[sg.Button("Copy GPS coordinates",key="-COPYCOORDS-")],[sg.Button("Update imagery",key="-UPDATEIMG-")],[sg.Button("Manual new image",key="-NEWIMG-")]])],
                   [sg.Frame('Spacecraft Telemetry/Stats:',
                             [[sg.Text("Spacecraft Name: N/A",key="-SPACECRAFTNAME-")],[sg.Text("Latitude: N/A",key="-LATTEXT-")],[sg.Text("Longitude: N/A",key="-LONGTEXT-")],[sg.Text("Altitude: N/A",key="-ALTITUDETEXT-")],[sg.Text("Speed: N/A",key="-SPEEDTEXT-")],[sg.Text("Temperature: N/A",key="-TEMPTEXT-")],[sg.Text("Timestamp: N/A",key="-TIMETEXT-")]])],
                   [sg.Frame('Spacecraft:', [[sg.Listbox(spacecraft_names, default_values=spacecraft_names[0], size=(20, 4), enable_events=True, key='-SPACECRAFTLIST-')],])],
@@ -109,6 +109,9 @@ def updateSSDV():
         im.save('rxtemp.png')
         window[constants.SSDV_IMAGE].update("rxtemp.png")
 def newImage():
+    global imagery_buffer
+    global image_count
+    global previous_imageid
     #New image, save the previous one and move on
     #Redecode everything
     return_code,imageid = packets.decode_ssdv(imagery_buffer,spacecraft)
@@ -478,6 +481,10 @@ while True:
         if event == constants.COPY_COORDINATES_BUTTON:
             #Copy our coordinates to clipboard
             pyperclip.copy(str(str(lat)+","+str(long)))
+        if event == constants.NEW_IMAGE_BUTTON:
+            newImage()
+        if event == constants.UPDATE_IMAGE_BUTTON:
+            updateSSDV()
                 
     if event == sg.WIN_CLOSED:
         break
