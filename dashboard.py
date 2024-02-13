@@ -94,6 +94,7 @@ def updateFigures():
 
 def updateSSDV():
     global callsign_good
+    global callsign_dec
     #Decode SSDV
     try:
         return_code,imageid = packets.decode_ssdv(imagery_buffer,spacecraft)
@@ -108,10 +109,10 @@ def updateSSDV():
     imageid_now = imageid
 
     try:
-                
-        im = Image.open('rxtemp.jpg')
-        im.save('rxtemp.png')
-        window[constants.SSDV_IMAGE].update("rxtemp.png")
+        if return_code == packets.OS42_TYPE_SUCCESS:        
+            im = Image.open('rxtemp.jpg')
+            im.save('rxtemp.png')
+            window[constants.SSDV_IMAGE].update("rxtemp.png")
     except:
         print("Failed updating image...")
 def newImage():
