@@ -436,6 +436,7 @@ while True:
                 updateFigures()
                 isSSDV = False
             else:
+                isSSDV = False
                 if lat == 0 and long == 0:
                     print("[WARN] GPS frame values are zero...")
                     gps_count = gps_count + 1
