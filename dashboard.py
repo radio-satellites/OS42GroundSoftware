@@ -16,7 +16,7 @@ import datetime
 import iconfile
 import sys
 
-version = "0.9.1"
+version = "0.10.2"
 
 initial = True #First time through
 
@@ -92,7 +92,7 @@ def updateFigures():
     window[constants.UNKNOWNFRAME_TEXT].update("Unknown Frames: "+str(uk_count))
     window[constants.TOTALFRAME_TEXT].update("Total Frames: "+str(total_count))
 
-def updateSSDV():
+def updateSSDV(ensureGood):
     global callsign_good
     global callsign_dec
     #Decode SSDV
@@ -109,7 +109,11 @@ def updateSSDV():
     imageid_now = imageid
 
     try:
-        if return_code == packets.OS42_TYPE_SUCCESS:        
+        if return_code == packets.OS42_TYPE_SUCCESS and ensureGood == True:        
+            im = Image.open('rxtemp.jpg')
+            im.save('rxtemp.png')
+            window[constants.SSDV_IMAGE].update("rxtemp.png")
+        elif ensureGood == False:
             im = Image.open('rxtemp.jpg')
             im.save('rxtemp.png')
             window[constants.SSDV_IMAGE].update("rxtemp.png")
@@ -306,7 +310,7 @@ while True:
                 imagery_buffer = imagery_buffer + data
 
             if total_count % 4 == 0:
-                updateSSDV()
+                updateSSDV(True)
                 """
                 #Decode SSDV
                 try:
@@ -496,7 +500,7 @@ while True:
             newImage()
         if event == constants.UPDATE_IMAGE_BUTTON:
             print("Manual SSDV update...")
-            updateSSDV()
+            updateSSDV(False)
                 
     if event == sg.WIN_CLOSED:
         break
