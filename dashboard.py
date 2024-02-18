@@ -309,7 +309,8 @@ while True:
 			else:
 				imagery_buffer = imagery_buffer + data
 
-			if total_count % 4 == 0:
+			if imagery_count % 4 == 0:
+				#print("Update SSDV!")
 				updateSSDV(False)
 				"""
 				#Decode SSDV
@@ -459,6 +460,12 @@ while True:
 			if return_code == packets.GPS_FRAME_VALID:
 				print("Payload reports a temperature of",reading)
 				window[constants.TEMPERATURE_TEXT].update("Temperature: "+str(reading)+" C")
+				f = open("GPSLog.txt",'a')
+				try:
+					f.write(reading+"\n")
+				except:
+					pass
+				f.close()
 				if lcdConnect:
 					s_lcd.send(("t:"+str(reading)).encode())
 			else:
