@@ -74,7 +74,7 @@ col2 = sg.Column([[sg.Frame('Socket/Telemetry stats:', [[sg.Text("Socket Disconn
 									reroute_stdout=True, reroute_stderr=True, echo_stdout_stderr=True, autoscroll=True, auto_refresh=True)]],pad=(0,0))]])]])
 
 col1 = sg.Column([
-	[sg.Frame('Spacecraft Imagery:', [[sg.Text(), sg.Column([[sg.Image("default.png",key='-IMAGE-'),],], size=(670,510), pad=(0,0))]])], ], pad=(0,0))
+	[sg.Frame('Spacecraft Imagery:', [[sg.Text(), sg.Column([[sg.Image("default.png",key='-IMAGE-'),],], size=(640,480), pad=(0,0))]])], ], pad=(0,0))
 
 # The final layout is a simple one
 layout = [[col1, col2]]
@@ -112,14 +112,16 @@ def updateSSDV(ensureGood):
 	try:
 		if return_code == packets.OS42_TYPE_SUCCESS and ensureGood == True:        
 			im = Image.open('rxtemp.jpg')
-			im.save('rxtemp.png')
-			window[constants.SSDV_IMAGE].update("rxtemp.png")
+			im = im.resize((640,480),Image.LANCZOS)
+			im.save('rxtemp_resize.png')
+			window[constants.SSDV_IMAGE].update("rxtemp_resize.png")
 		elif ensureGood == False:
 			im = Image.open('rxtemp.jpg')
-			im.save('rxtemp.png')
-			window[constants.SSDV_IMAGE].update("rxtemp.png")
-	except:
-		print("Failed updating image...")
+			im = im.resize((640,480),Image.LANCZOS)
+			im.save('rxtemp_resize.png')
+			window[constants.SSDV_IMAGE].update("rxtemp_resize.png")
+	except Exception as e:
+		print("Failed updating image...",e)
 def newImage():
 	global imagery_buffer
 	global image_count
@@ -336,6 +338,7 @@ while True:
 			
 			isSSDV = False
 		elif packet_type == packets.OS42_TYPE_GPS:
+			isSSDV = False
 			#This is a GPS packet
 			try:
 				success, alt, lat, long, frame_id,speed_ms,h_t,m_t,s_t = packets.decode_GPS(data)
@@ -454,8 +457,8 @@ while True:
 			
 			isSSDV = False
 		elif packet_type == packets.OS42_TYPE_TEMP_READING:
-			return_code,reading = packets.decode_temp(data)
 			isSSDV = False
+			return_code,reading = packets.decode_temp(data)
 
 			if return_code == packets.GPS_FRAME_VALID:
 				print("Payload reports a temperature of",reading)
