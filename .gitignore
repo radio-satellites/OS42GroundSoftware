@@ -6,4 +6,5 @@
 /GPSLog.txt
 /imageid.txt
 /__pycache__
-
+/postprocess/GPSLog.txt
+/postprocess/GPSLog.kml
