@@ -1,5 +1,9 @@
 import simplekml
 
+####CHANGE####
+altitude_ground = 130 #Ground level altitude
+##############
+
 #GPS Packet handler from PacketHandler42.py
 
 GPS_FRAME_VALID = 300
@@ -46,7 +50,7 @@ kml = simplekml.Kml()
 for line in f:
     try:
         return_type,altitude,lat,long,frame_id,speed_ms,time_h,time_m,time_s = decode_GPS(line)
-        kml.newpoint(name=str(frame_id), coords=[(lat,long,altitude)])
+        kml.newpoint(name=str(frame_id), coords=[(long,lat,str(int(float(altitude)-altitude_ground)))],gxaltitudemode = "relativeToSeaFloor")
     except Exception as e:
         print("Unable to decode line",e)
 
