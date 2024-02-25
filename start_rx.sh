@@ -17,6 +17,6 @@ case ${answer:0:1} in
 esac
 
 echo ""
-rtl_tcp & python3 DEMOD.py & python3 dashboard.py
+rtl_tcp & python3 DEMOD.py & python3 dashboard.py autocall
 
 pkill -f "rtl_tcp"

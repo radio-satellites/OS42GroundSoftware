@@ -51,6 +51,9 @@ lcdConnect = False
 if "uselcd" in list(sys.argv):
 	lcdConnect = True
 	print("Using LCD!")
+if "autocall" in list(sys.argv):
+        callsign_good = True
+        print("Auto-validated callsign!")
 
 try:
 
