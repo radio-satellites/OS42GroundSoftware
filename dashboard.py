@@ -402,7 +402,7 @@ while True:
 						frame = int(frame_id),
 						vel_h = str(speed_ms),
                                                 frequency=434.0,
-                                                modulation="Wideband LoRa"
+                                                modulation="LoRa (SF7BW500CR85)"
 						)
 						print("Uploaded to Sondehub!")
 					except Exception as e:
