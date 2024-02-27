@@ -17,6 +17,7 @@ case ${answer:0:1} in
 esac
 
 echo ""
+echo Starting RX at 434.0MHz
 rtl_tcp & python3 DEMOD.py & python3 dashboard.py autocall & python3 mapview.py
 
 pkill -f "rtl_tcp"
