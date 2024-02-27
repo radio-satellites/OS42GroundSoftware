@@ -52,8 +52,8 @@ if "uselcd" in list(sys.argv):
 	lcdConnect = True
 	print("Using LCD!")
 if "autocall" in list(sys.argv):
-        callsign_good = True
-        print("Auto-validated callsign!")
+	callsign_good = True
+	print("Auto-validated callsign!")
 
 try:
 
@@ -255,6 +255,8 @@ while True:
 				print(e)
 				window[constants.SOCKET_TEXT].update("Socket Disconnected",text_color="red")
 				time.sleep(1)
+		if lcdConnect:
+			s_lcd.send(("c:"+str(spacecraft)).encode())
 
 		initial = False
 		print("Waiting for packets...")
@@ -398,7 +400,9 @@ while True:
 						float(long)+config.LONG_OFFSET, # Longitude
 						float(alt)+config.ALT_OFFSET, # Altitude
 						frame = int(frame_id),
-						vel_h = str(speed_ms)
+						vel_h = str(speed_ms),
+                                                frequency=434.0,
+                                                modulation="Wideband LoRa"
 						)
 						print("Uploaded to Sondehub!")
 					except Exception as e:
