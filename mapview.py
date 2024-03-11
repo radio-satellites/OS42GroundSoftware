@@ -49,6 +49,21 @@ wasascending = True
 
 last_altitude = 0
 
+ascent_alts = [0] #Used for calculating ascent rate
+
+ascent_rate = 0
+
+"""
+def calculate_ascent():
+    global ascent_alts
+    if len(ascent_alts) >= 4:
+        #Update ascent rate
+        ascent_rate = round(sum(ascent_alts)/len(ascent_alts),ndigits=2)
+        ascent_alts = []
+        return ascent_rate
+    else:
+        return ascent_rate
+"""
 def on_message(message):
     try:
         global path_1
@@ -68,7 +83,7 @@ def on_message(message):
             initial = False
         #print("[DEBUG] Adding "+str(message['lat'])+","+str(message['lon']))
         print("[DEBUG] ascending="+str(ascending)+", last_altitude="+str(last_altitude)+",alt="+str(message['alt'])+", wasascending="+str(wasascending))
-        if message['alt'] >= last_altitude-2 and wasascending:
+        if message['alt'] >= last_altitude-3 and wasascending:
             ascending = True
         else:
             ascending = False

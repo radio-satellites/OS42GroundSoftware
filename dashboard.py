@@ -26,7 +26,7 @@ callsign_dec = ""
 
 reading = -9
 
-spacecraft_names = ['OS42-1','OS42-T','OS42-3','OS42-4','OS42-5']
+spacecraft_names = ['OS42-1','OS42-2','OS42-3','OS42-4','OS42-5','OS42-T']
 
 spacecraft = spacecraft_names[0] #Default spacecraft to receive
 
@@ -483,6 +483,9 @@ while True:
 		else:
 			print("Unknown packet type")
 			print(data.hex())
+			#print(len(data))
+			if len(data) == 0:
+                                break #Close window
 			uk_count = uk_count + 1
 			total_count = total_count + 1
 			updateFigures()
