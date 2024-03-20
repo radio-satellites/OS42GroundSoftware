@@ -109,7 +109,7 @@ def decode_GPS(line):
         line_parts = line.split(",")
 
         altitude = line_parts[1].replace(" ","")
-        if altitude == "UK":
+        if altitude == "UK" or float(altitude) > 50000: #Alt > 50000 seems to happen with the new prototype???
             return_type = GPS_FRAME_INVALID
         lat = line_parts[2]
         long = line_parts[3]
