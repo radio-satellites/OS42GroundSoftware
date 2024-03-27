@@ -394,7 +394,7 @@ while True:
 				if sondehub_enabled and callsign_good:
 					try:
 						uploader.add_telemetry(
-						callsign_dec, # Your payload callsign
+						spacecraft, # Your payload callsign
 						str(int(float(h_t)))+":"+str(int(float(m_t)))+":"+str(int(float(s_t))), # Time
 						float(lat)+config.LAT_OFFSET, # Latitude
 						float(long)+config.LONG_OFFSET, # Longitude
