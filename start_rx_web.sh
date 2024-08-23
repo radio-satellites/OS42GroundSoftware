@@ -18,6 +18,6 @@ esac
 
 echo ""
 echo Starting RX at 434.0MHz
-python3 -m http.server 8080 & rtl_tcp & python3 DEMOD.py & python3 dashboard.py autocall & python3 mapview.py
+python3 -m http.server 8080 & rtl_tcp & python3 DEMOD.py & python3 dashboard.py autocall
 
 pkill -f "rtl_tcp"

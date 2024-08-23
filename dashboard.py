@@ -26,7 +26,7 @@ callsign_dec = ""
 
 reading = -9
 
-spacecraft_names = ['OS42-1','OS42-2','OS42-3','OS42-4','OS42-5','OS42-T']
+spacecraft_names = ['GRU-1','OS42-2','OS42-3','OS42-4','OS42-5','OS42-T']
 
 spacecraft = spacecraft_names[0] #Default spacecraft to receive
 

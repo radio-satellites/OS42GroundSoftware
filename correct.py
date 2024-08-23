@@ -1,3 +1,4 @@
+"""
 from PIL import Image
 import sys
 
@@ -32,3 +33,6 @@ for y in range(h):
 f.close()
 
 im_out.save(args[2])
+"""
+
+print("Hi!")

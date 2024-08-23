@@ -82,7 +82,7 @@ class DEMOD(gr.top_block, Qt.QWidget):
         # Variables
         ##################################################
         self.sf = sf = 7
-        self.bw = bw = 500000
+        self.bw = bw = 250000
         self.target_freq = target_freq = 434e6
         self.symbols_per_sec = symbols_per_sec = float(bw) / (2**sf)
         self.samp_rate = samp_rate = int(2.56e6)
